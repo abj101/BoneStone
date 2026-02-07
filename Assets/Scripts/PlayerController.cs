@@ -3,18 +3,31 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Rigidbody _rb;
+    [SerializeField] private HealthSystem _healthSystem;
     [SerializeField] private float _speed = 5;
     [SerializeField] private float _turnSpeed = 360;
     private Vector3 _input;
 
+    private void Awake()
+    {
+        if (_healthSystem == null)
+            _healthSystem = GetComponent<HealthSystem>();
+        if (_rb != null)
+            _rb.constraints |= RigidbodyConstraints.FreezeRotation;
+    }
+
     private void Update()
     {
+        if (_healthSystem != null && !_healthSystem.IsAlive)
+            return;
         GatherInput();
         Look();
     }
 
     private void FixedUpdate()
     {
+        if (_healthSystem != null && (!_healthSystem.IsAlive || _healthSystem.IsBeingKnockedBack))
+            return;
         Move();
     }
 
