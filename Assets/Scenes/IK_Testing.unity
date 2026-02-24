@@ -268,9 +268,10 @@ MonoBehaviour:
   ikPole: {fileID: 1347434862}
   iterationCount: 20
   maxError: 0.01
-  snapBackStrength: 1
-  boneLengths: []
+  snapBackStrength: 0.6
+  poleAngle: 0
   chainLength: 3
+  boneLengths: []
   totalLength: 0
   bonePositions: []
   startDirectionState: []

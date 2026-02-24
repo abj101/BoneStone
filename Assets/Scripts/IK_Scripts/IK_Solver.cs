@@ -18,11 +18,12 @@ public class IK_Solver : MonoBehaviour
     public int iterationCount = 10;
     public float maxError = 0.01f;
     public float snapBackStrength = 1f;
+    public int poleAngle = 0;
+    [SerializeField] private int chainLength = 0;
 
     //calculation components
     [Header("Debugging")]
     [SerializeField] private float[] boneLengths;
-    [SerializeField] private int chainLength = 0;
     [SerializeField] private float totalLength = 0;
     [SerializeField] private Vector3[] bonePositions;
     [SerializeField]private Vector3[] startDirectionState;
@@ -119,6 +120,18 @@ public class IK_Solver : MonoBehaviour
             {
                 bonePositions[i+1] = Vector3.Lerp(bonePositions[i+1], bonePositions[i]+rootRotDif*startDirectionState[i], snapBackStrength);
             }
+
+            if(ikPole != null)
+            {
+                for(int i = 1; i< bonePositions.Length-1; i++)
+                {
+                    Plane plane = new Plane(bonePositions[i+1]-bonePositions[i-1], bonePositions[i-1]);
+                    Vector3 projectedPole = plane.ClosestPointOnPlane(ikPole.position);
+                    Vector3 projectedBone = plane.ClosestPointOnPlane(bonePositions[i]);
+                    float angle = Vector3.SignedAngle(projectedBone-bonePositions[i-1], projectedPole-bonePositions[i-1], plane.normal) + poleAngle;
+                    bonePositions[i] = Quaternion.AngleAxis(angle, plane.normal) * (bonePositions[i]-bonePositions[i-1]) + bonePositions[i-1];
+                }
+            }
             
             for(int iteration = 0; iteration<iterationCount; iteration++)
             {
@@ -151,18 +164,6 @@ public class IK_Solver : MonoBehaviour
 
             
         }
-
-        if(ikPole != null)
-            {
-                for(int i = 1; i< bonePositions.Length-1; i++)
-                {
-                    Plane plane = new Plane(bonePositions[i+1]-bonePositions[i-1], bonePositions[i-1]);
-                    Vector3 projectedPole = plane.ClosestPointOnPlane(ikPole.position);
-                    Vector3 projectedBone = plane.ClosestPointOnPlane(bonePositions[i]);
-                    float angle = Vector3.SignedAngle(projectedBone-bonePositions[i-1], projectedPole-bonePositions[i-1], plane.normal);
-                    bonePositions[i] = Quaternion.AngleAxis(angle, plane.normal) * (bonePositions[i]-bonePositions[i-1]) + bonePositions[i-1];
-                }
-            }
 
         //apply transforms
         for (int i = 0; i < bonePositions.Length; i++)
