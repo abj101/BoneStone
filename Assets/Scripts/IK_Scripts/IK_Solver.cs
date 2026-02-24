@@ -188,3 +188,4 @@ public class IK_Solver : MonoBehaviour
 
 //attributions:
 // David on dev.to - https://dev.to/dslower/inverse-kinematics-solver-using-the-fabrik-method-1m92
+// Ditzel Games on YT - https://www.youtube.com/watch?v=qqOAzn05fvk
