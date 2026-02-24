@@ -3,36 +3,56 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Rigidbody _rb;
-    [SerializeField] private float _speed = 5;
-    [SerializeField] private float _turnSpeed = 360;
+    [SerializeField] private float _speed = 5f;
+    [SerializeField] private float _turnSpeed = 360f;
+
     private Vector3 _input;
 
     private void Update()
     {
         GatherInput();
-        Look();
     }
 
     private void FixedUpdate()
     {
         Move();
+        Look();
     }
 
     private void GatherInput()
     {
-        _input = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-    }
-
-    private void Look()
-    {
-        if (_input == Vector3.zero) return;
-
-        var rot = Quaternion.LookRotation(_input.ToIso(), Vector3.up);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, _turnSpeed * Time.deltaTime);
+        _input = new Vector3(
+            Input.GetAxisRaw("Horizontal"),
+            0,
+            Input.GetAxisRaw("Vertical")
+        );
     }
 
     private void Move()
     {
-        _rb.MovePosition(transform.position + transform.forward * _input.normalized.magnitude * _speed * Time.deltaTime);
+        if (_input.sqrMagnitude < 0.001f) return;
+
+        Vector3 isoDir = _input.ToIso().normalized;
+
+        _rb.MovePosition(
+            _rb.position + isoDir * _speed * Time.fixedDeltaTime
+        );
+    }
+
+    private void Look()
+    {
+        if (_input.sqrMagnitude < 0.001f) return;
+
+        Vector3 isoDir = _input.ToIso();
+
+        Quaternion targetRot = Quaternion.LookRotation(isoDir, Vector3.up);
+
+        _rb.MoveRotation(
+            Quaternion.RotateTowards(
+                _rb.rotation,
+                targetRot,
+                _turnSpeed * Time.fixedDeltaTime
+            )
+        );
     }
 }
