@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2504bb1e8fe5f470db16322c4021d6b1
+guid: 8c2c6c300bd8fc441878f426377bec64
 AudioImporter:
   externalObjects: {}
   serializedVersion: 6
@@ -22,8 +22,8 @@ AudioImporter:
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 315452
-  packageName: RPG Dungeon Sounds Pack
-  packageVersion: 1.0
-  assetPath: Assets/Audio/Ambience/Dark Ambient 2.wav
-  uploadId: 744368
+  productId: 189879
+  packageName: Footsteps - Essentials
+  packageVersion: 1.3
+  assetPath: Assets/Footsteps - Essentials/Footsteps_Tile/Footsteps_Tile_Run/Footsteps_Tile_Run_05.wav
+  uploadId: 473093

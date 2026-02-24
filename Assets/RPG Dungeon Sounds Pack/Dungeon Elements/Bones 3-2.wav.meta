@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2504bb1e8fe5f470db16322c4021d6b1
+guid: dc9efda75e44a4fba9b01fe0d43b5966
 AudioImporter:
   externalObjects: {}
   serializedVersion: 6
@@ -25,5 +25,5 @@ AssetOrigin:
   productId: 315452
   packageName: RPG Dungeon Sounds Pack
   packageVersion: 1.0
-  assetPath: Assets/Audio/Ambience/Dark Ambient 2.wav
+  assetPath: Assets/RPG Dungeon Sounds Pack/Dungeon Elements/Bones 3-2.wav
   uploadId: 744368
