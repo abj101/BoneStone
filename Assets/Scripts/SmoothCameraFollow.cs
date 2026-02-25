@@ -21,7 +21,7 @@ public class SmoothCameraFollow : MonoBehaviour
         _offset = transform.position - target.position;
     }
 
-    private void FixedUpdate() // 👈 changed
+    private void LateUpdate()   // ✅ Use LateUpdate
     {
         Vector3 targetPosition = target.position + _offset;
 
@@ -32,9 +32,7 @@ public class SmoothCameraFollow : MonoBehaviour
             transform.position,
             targetPosition,
             ref _currentVelocity,
-            smoothTime,
-            Mathf.Infinity,
-            Time.fixedDeltaTime // 👈 important
+            smoothTime
         );
     }
 }

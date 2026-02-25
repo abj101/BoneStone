@@ -1,22 +1,35 @@
 using UnityEngine;
 
+[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(WeaponHolder))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private Rigidbody _rb;
+    [Header("Movement")]
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _turnSpeed = 360f;
+    [SerializeField] private float _gravity = -9.81f;
+
+    private CharacterController _controller;
+    private KnockbackController _knockback;
+    private WeaponHolder _weaponHolder;
 
     private Vector3 _input;
+    private Vector3 _verticalVelocity;
+
+    private void Awake()
+    {
+        _controller = GetComponent<CharacterController>();
+        _knockback = GetComponent<KnockbackController>();
+        _weaponHolder = GetComponent<WeaponHolder>();
+    }
 
     private void Update()
     {
         GatherInput();
-    }
-
-    private void FixedUpdate()
-    {
+        HandleCombat();
         Move();
         Look();
+        ApplyGravity();
     }
 
     private void GatherInput()
@@ -28,15 +41,33 @@ public class PlayerController : MonoBehaviour
         );
     }
 
+    private void HandleCombat()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            _weaponHolder?.Attack();
+        }
+    }
+
     private void Move()
     {
-        if (_input.sqrMagnitude < 0.001f) return;
+        Vector3 moveDirection = Vector3.zero;
 
-        Vector3 isoDir = _input.ToIso().normalized;
+        if (_input.sqrMagnitude > 0.001f)
+        {
+            moveDirection = _input.ToIso().normalized * _speed;
+        }
 
-        _rb.MovePosition(
-            _rb.position + isoDir * _speed * Time.fixedDeltaTime
-        );
+        // Add knockback
+        if (_knockback != null)
+        {
+            moveDirection += _knockback.KnockbackVelocity;
+        }
+
+        // Add gravity
+        moveDirection += _verticalVelocity;
+
+        _controller.Move(moveDirection * Time.deltaTime);
     }
 
     private void Look()
@@ -47,12 +78,22 @@ public class PlayerController : MonoBehaviour
 
         Quaternion targetRot = Quaternion.LookRotation(isoDir, Vector3.up);
 
-        _rb.MoveRotation(
-            Quaternion.RotateTowards(
-                _rb.rotation,
-                targetRot,
-                _turnSpeed * Time.fixedDeltaTime
-            )
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation,
+            targetRot,
+            _turnSpeed * Time.deltaTime
         );
+    }
+
+    private void ApplyGravity()
+    {
+        if (_controller.isGrounded && _verticalVelocity.y < 0)
+        {
+            _verticalVelocity.y = -2f;
+        }
+        else
+        {
+            _verticalVelocity.y += _gravity * Time.deltaTime;
+        }
     }
 }
