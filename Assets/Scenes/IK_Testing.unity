@@ -251,31 +251,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: -7573517617234207006, guid: 436051a51319ce94093bb9f5e3048edb, type: 3}
   m_PrefabInstance: {fileID: 1347434857}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &766167115
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 766167113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f32dbb489d46e8048a86ced04608a206, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::IK_Solver
-  bones: []
-  ikTarget: {fileID: 1347434861}
-  ikPole: {fileID: 1347434862}
-  iterationCount: 20
-  maxError: 0.01
-  snapBackStrength: 0.6
-  poleAngle: 0
-  chainLength: 3
-  boneLengths: []
-  totalLength: 0
-  bonePositions: []
-  startDirectionState: []
-  startRotationBone: []
 --- !u!1001 &1347434857
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -360,7 +335,7 @@ PrefabInstance:
       addedObject: {fileID: 1347434859}
     - targetCorrespondingSourceObject: {fileID: -7573517617234207006, guid: 436051a51319ce94093bb9f5e3048edb, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 766167115}
+      addedObject: {fileID: 1347434864}
   m_SourcePrefab: {fileID: 100100000, guid: 436051a51319ce94093bb9f5e3048edb, type: 3}
 --- !u!1 &1347434858 stripped
 GameObject:
@@ -399,6 +374,26 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1049682599774107839, guid: 436051a51319ce94093bb9f5e3048edb, type: 3}
   m_PrefabInstance: {fileID: 1347434857}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1347434864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766167113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6ca1d460aae903459b44a2ba5bcab5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Jacobian_solver
+  chainLength: 3
+  ikTarget: {fileID: 1347434861}
+  ikPole: {fileID: 1347434862}
+  bones: []
+  iterationCount: 10
+  maxError: 0.01
+  bonePositions: []
+  boneTranspose: []
 --- !u!4 &1625092990 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6627261804741530139, guid: 436051a51319ce94093bb9f5e3048edb, type: 3}
