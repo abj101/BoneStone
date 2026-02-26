@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
 public class DashController : MonoBehaviour
@@ -13,6 +14,9 @@ public class DashController : MonoBehaviour
 
     [Header("Cooldown")]
     [SerializeField] private float _cooldown = 1f;
+
+    [Header("Input")]
+    [SerializeField] private InputActionReference _dashAction;
 
     private CharacterController _controller;
     private Health _health;
@@ -29,9 +33,12 @@ public class DashController : MonoBehaviour
         _health = GetComponent<Health>();
     }
 
+    private void OnEnable() => _dashAction.action.Enable();
+    private void OnDisable() => _dashAction.action.Disable();
+
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && CanDash())
+        if (_dashAction.action.WasPressedThisFrame() && CanDash())
             StartCoroutine(DoDash());
     }
 
