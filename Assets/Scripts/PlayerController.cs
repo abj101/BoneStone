@@ -1,7 +1,6 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(WeaponHolder))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
@@ -11,8 +10,6 @@ public class PlayerController : MonoBehaviour
 
     private CharacterController _controller;
     private KnockbackController _knockback;
-    private WeaponHolder _weaponHolder;
-
     private Vector3 _input;
     private Vector3 _verticalVelocity;
 
@@ -20,13 +17,11 @@ public class PlayerController : MonoBehaviour
     {
         _controller = GetComponent<CharacterController>();
         _knockback = GetComponent<KnockbackController>();
-        _weaponHolder = GetComponent<WeaponHolder>();
     }
 
     private void Update()
     {
         GatherInput();
-        HandleCombat();
         Move();
         Look();
         ApplyGravity();
@@ -39,14 +34,6 @@ public class PlayerController : MonoBehaviour
             0,
             Input.GetAxisRaw("Vertical")
         );
-    }
-
-    private void HandleCombat()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            _weaponHolder?.Attack();
-        }
     }
 
     private void Move()
