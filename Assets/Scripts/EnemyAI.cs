@@ -44,6 +44,8 @@ public class EnemyAI : MonoBehaviour
     void Update()
     {
         if (player == null) return;
+        // Don't run AI while agent is disabled by knockback (Charging disables it too, so we still run that)
+        if (agent != null && !agent.enabled && state != State.Charging) return;
 
         switch (state)
         {

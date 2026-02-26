@@ -11,6 +11,7 @@ public class DashController : MonoBehaviour
 
     [Header("Invulnerability")]
     [SerializeField] private float _iFrameDuration = 0.25f;
+    [SerializeField] private Color _invulnColor = new Color(1f, 1f, 1f, 0.6f);
 
     [Header("Cooldown")]
     [SerializeField] private float _cooldown = 1f;
@@ -20,6 +21,10 @@ public class DashController : MonoBehaviour
 
     private CharacterController _controller;
     private Health _health;
+
+    private Renderer[] _renderers;
+    private MaterialPropertyBlock _propBlock;
+    private readonly int _baseColorID = Shader.PropertyToID("_BaseColor");
 
     private bool _isDashing;
     private float _lastDashTime = -999f;
@@ -31,6 +36,9 @@ public class DashController : MonoBehaviour
     {
         _controller = GetComponent<CharacterController>();
         _health = GetComponent<Health>();
+
+        _renderers = GetComponentsInChildren<Renderer>();
+        _propBlock = new MaterialPropertyBlock();
     }
 
     private void OnEnable() => _dashAction.action.Enable();
@@ -70,7 +78,28 @@ public class DashController : MonoBehaviour
     private IEnumerator IFrameWindow()
     {
         if (_health != null) _health.SetInvulnerable(true);
+
+        SetInvulnVisual(true);
+
         yield return new WaitForSeconds(_iFrameDuration);
+
         if (_health != null) _health.SetInvulnerable(false);
+
+        SetInvulnVisual(false);
+    }
+
+    private void SetInvulnVisual(bool state)
+    {
+        foreach (var rend in _renderers)
+        {
+            rend.GetPropertyBlock(_propBlock);
+
+            if (state)
+                _propBlock.SetColor(_baseColorID, _invulnColor);
+            else
+                _propBlock.Clear();
+
+            rend.SetPropertyBlock(_propBlock);
+        }
     }
 }
