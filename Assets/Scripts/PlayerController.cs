@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
 
     private CharacterController _controller;
     private KnockbackController _knockback;
+    private DashController _dash;
     private Vector3 _input;
     private Vector3 _verticalVelocity;
 
@@ -17,6 +18,7 @@ public class PlayerController : MonoBehaviour
     {
         _controller = GetComponent<CharacterController>();
         _knockback = GetComponent<KnockbackController>();
+        _dash = GetComponent<DashController>();
     }
 
     private void Update()
@@ -38,6 +40,8 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
+        if (_dash != null && _dash.IsDashing) return;
+
         Vector3 moveDirection = Vector3.zero;
 
         if (_input.sqrMagnitude > 0.001f)
@@ -45,13 +49,11 @@ public class PlayerController : MonoBehaviour
             moveDirection = _input.ToIso().normalized * _speed;
         }
 
-        // Add knockback
         if (_knockback != null)
         {
             moveDirection += _knockback.KnockbackVelocity;
         }
 
-        // Add gravity
         moveDirection += _verticalVelocity;
 
         _controller.Move(moveDirection * Time.deltaTime);

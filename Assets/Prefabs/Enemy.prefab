@@ -128,7 +128,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -152,10 +152,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 952d67416e02178458fe2a096eaf9cfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  awarenessRadius: 6
+  jitterRadius: 2
+  reaggroCooldown: 0.2
   damage: 10
-  attackRange: 2
-  attackCooldown: 1
-  knockbackForce: 6
+  attackRange: 4
+  attackCooldown: 2
+  chargeDuration: 1
+  chargeSpeed: 7
+  knockbackForce: 20
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!114 &5003057709478466906
 MonoBehaviour:
   m_ObjectHideFlags: 0
