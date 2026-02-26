@@ -2126,11 +2126,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1620119834}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5981b032e6258e846ad922ba6c003108, type: 3}
+  m_Script: {fileID: 11500000, guid: adcc3feccba4b264e8260dd4efb769ef, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponHolder
-  handSocket: {fileID: 655243966}
-  startingWeaponPrefab: {fileID: 8409767605031286480, guid: 9857ade1c0cce144bb17efe590b4edca, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::DashController
+  _dashSpeed: 20
+  _dashDuration: 0.15
+  _iFrameDuration: 0.25
+  _cooldown: 1
 --- !u!1 &1949695780
 GameObject:
   m_ObjectHideFlags: 0
