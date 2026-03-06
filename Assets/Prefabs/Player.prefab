@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2325970511330395252
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 416438332317940038}
+  m_Layer: 3
+  m_Name: WeaponSocketLeft
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &416438332317940038
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2325970511330395252}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.67, y: -0.905, z: 0.083}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3937098884520504997}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3718542164635664287
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5526815095229129084}
   m_Layer: 3
-  m_Name: WeaponSocket
+  m_Name: WeaponSocketRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 3718542164635664287}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.708, y: 0.23, z: 0.083}
+  m_LocalPosition: {x: 0.708, y: -0.905, z: 0.083}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -72,6 +103,7 @@ Transform:
   m_Children:
   - {fileID: 4544858446365051466}
   - {fileID: 5526815095229129084}
+  - {fileID: 416438332317940038}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5841718612268375332
@@ -199,6 +231,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KnockbackController
   knockbackDecay: 4
+  minVelocityToReenableAgent: 0.5
 --- !u!143 &611898623013731030
 CharacterController:
   m_ObjectHideFlags: 0
@@ -254,7 +287,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37048a704f4fa0a46b65a0bbf4c225c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackController
-  attackAction: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  leftAttackAction: {fileID: -8005261258531114329, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  rightAttackAction: {fileID: 5606118687590646638, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!114 &-2298091292658832013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,8 +301,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28f246ab7b57695499e3232674ac4602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponHolder
-  weaponSocket: {fileID: 5526815095229129084}
-  defaultWeapon: {fileID: 6494186059507480152, guid: 626a7dbf2f8a49042bc3d8a355947781, type: 3}
+  leftWeaponSocket: {fileID: 416438332317940038}
+  rightWeaponSocket: {fileID: 5526815095229129084}
+  leftDefaultWeapon: {fileID: 8734682219450012345, guid: 7e96c5ed083b0574f8cc6414abf7bc6c, type: 3}
+  rightDefaultWeapon: {fileID: 6494186059507480152, guid: 626a7dbf2f8a49042bc3d8a355947781, type: 3}
 --- !u!1001 &4078059834442296737
 PrefabInstance:
   m_ObjectHideFlags: 0
