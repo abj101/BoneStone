@@ -31,6 +31,27 @@ public class DashController : MonoBehaviour
     private Vector3 _dashDirection;
 
     public bool IsDashing => _isDashing;
+    public float CooldownDuration => _cooldown;
+
+    public float CooldownRemaining
+    {
+        get
+        {
+            float remaining = (_lastDashTime + _cooldown) - Time.time;
+            return Mathf.Max(0f, remaining);
+        }
+    }
+
+    public float CooldownProgress
+    {
+        get
+        {
+            if (_cooldown <= 0f) return 0f;
+            return CooldownRemaining / _cooldown;
+        }
+    }
+
+    public bool IsDashReady => CooldownRemaining <= 0f && !_isDashing;
 
     private void Awake()
     {
