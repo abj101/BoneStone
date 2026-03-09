@@ -19,6 +19,10 @@ public class DashController : MonoBehaviour
     [Header("Input")]
     [SerializeField] private InputActionReference _dashAction;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip _dashSound;
+    [SerializeField] private AudioSource _audioSource;
+
     private CharacterController _controller;
     private Health _health;
 
@@ -77,6 +81,9 @@ public class DashController : MonoBehaviour
     {
         _isDashing = true;
         _lastDashTime = Time.time;
+
+        if(_audioSource != null && _dashSound != null)
+            _audioSource.PlayOneShot(_dashSound);
 
         Vector3 input = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         _dashDirection = input.sqrMagnitude > 0.001f

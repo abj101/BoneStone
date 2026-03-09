@@ -17,6 +17,10 @@ public class RangedWeapon : Weapon
     [SerializeField] private GameObject bulletVisualPrefab;
     [SerializeField] private float bulletSpeed = 25f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip shootSound;
+    [SerializeField] private AudioSource audioSource;
+
     [Header("Debug")]
     [SerializeField] private bool drawGizmos = true;
 
@@ -26,6 +30,9 @@ public class RangedWeapon : Weapon
     {
         if (Time.time < _nextFireTime) return;
         _nextFireTime = Time.time + Mathf.Max(0f, fireCooldown);
+
+        if (audioSource != null && shootSound != null)
+            audioSource.PlayOneShot(shootSound);
 
         Transform owner = Owner != null ? Owner : transform;
 
