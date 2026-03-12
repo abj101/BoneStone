@@ -18,6 +18,8 @@ public class MeleeWeapon : Weapon
     [Tooltip("Assign a prefab: cube mesh, no Collider, transparent/emissive material. If null, a default cube is used.")]
     [SerializeField] private GameObject hitboxVisualPrefab;
     [SerializeField] private Color hitboxColor = new Color(1f, 0.2f, 0.2f, 0.35f);
+    [Header("Audio")]
+    [SerializeField] private AudioClip[] swingClips;
 
     private Animator _animator;
     private bool _isAttacking;
@@ -36,6 +38,13 @@ public class MeleeWeapon : Weapon
 
         _isAttacking = true;
         _hitHealthIdsThisAttack.Clear();
+
+        if (swingClips !=  null && swingClips.Length > 0)
+        {
+            AudioClip clip = swingClips[Random.Range(0, swingClips.Length)];
+            AudioSource.PlayClipAtPoint(clip, transform.position);
+        } 
+            
 
         if (_animator != null)
         {

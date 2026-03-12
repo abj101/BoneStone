@@ -32,7 +32,7 @@ public class RangedWeapon : Weapon
         _nextFireTime = Time.time + Mathf.Max(0f, fireCooldown);
 
         if (audioSource != null && shootSound != null)
-            audioSource.PlayOneShot(shootSound);
+            audioSource.PlayOneShot(shootSound, 0.2f);
 
         Transform owner = Owner != null ? Owner : transform;
 
