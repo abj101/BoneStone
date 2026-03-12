@@ -28,6 +28,7 @@ public class EnemyAI : MonoBehaviour
     private Vector3 chargeDirection;
     private Vector3 jitterOffset;
     private float jitterRefreshTimer;
+    private float _baseOffset;
 
     private enum State { Idle, Chase, ChargeWindup, Charging }
     private State state = State.Idle;
@@ -35,6 +36,7 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        _baseOffset = agent != null ? agent.baseOffset : 0f;
         var go = GameObject.FindGameObjectWithTag("Player");
         player = go.transform;
         playerHealth = go.GetComponent<Health>();
@@ -44,8 +46,7 @@ public class EnemyAI : MonoBehaviour
     void Update()
     {
         if (player == null) return;
-        // Don't run AI while agent is disabled by knockback (Charging disables it too, so we still run that)
-        if (agent != null && !agent.enabled && state != State.Charging) return;
+        if (agent != null && !agent.enabled) return;
 
         switch (state)
         {
@@ -88,11 +89,17 @@ public class EnemyAI : MonoBehaviour
     void UpdateWindup()
     {
         agent.SetDestination(transform.position);
-        transform.forward = Vector3.Lerp(
-            transform.forward,
-            (player.position - transform.position).normalized,
-            Time.deltaTime * 10f
-        );
+
+        Vector3 toPlayer = player.position - transform.position;
+        toPlayer.y = 0f;
+        if (toPlayer.sqrMagnitude > 0.001f)
+        {
+            transform.forward = Vector3.Lerp(
+                transform.forward,
+                toPlayer.normalized,
+                Time.deltaTime * 10f
+            );
+        }
 
         chargeDuration_elapsed += Time.deltaTime;
         if (chargeDuration_elapsed >= 0.2f)
@@ -102,7 +109,16 @@ public class EnemyAI : MonoBehaviour
     void UpdateCharging()
     {
         chargeDuration_elapsed += Time.deltaTime;
-        transform.position += chargeDirection * chargeSpeed * Time.deltaTime;
+
+        agent.velocity = chargeDirection * chargeSpeed;
+
+        Vector3 feetPos = transform.position - Vector3.up * _baseOffset;
+        Vector3 step = chargeDirection * chargeSpeed * Time.deltaTime;
+        if (NavMesh.Raycast(feetPos, feetPos + step, out NavMeshHit wallHit, NavMesh.AllAreas))
+        {
+            EndCharge();
+            return;
+        }
 
         if (Physics.OverlapSphere(transform.position, 0.8f, playerLayer).Length > 0)
         {
@@ -140,16 +156,38 @@ public class EnemyAI : MonoBehaviour
     {
         state = State.Charging;
         chargeDuration_elapsed = 0f;
-        agent.enabled = false;
-        chargeDirection = (player.position - transform.position).normalized;
+
+        agent.ResetPath();
+        agent.isStopped = false;
+
+        Vector3 toPlayer = player.position - transform.position;
+        toPlayer.y = 0f;
+        chargeDirection = toPlayer.normalized;
+
         lastAttackTime = Time.time;
     }
 
     void EndCharge()
     {
-        agent.enabled = true;
-        agent.Warp(transform.position);
+        agent.velocity = Vector3.zero;
+
+        if (!agent.isOnNavMesh)
+        {
+            Vector3 feetPos = transform.position - Vector3.up * _baseOffset;
+            if (NavMesh.SamplePosition(feetPos, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+            {
+                transform.position = new Vector3(hit.position.x, hit.position.y + _baseOffset, hit.position.z);
+                agent.Warp(transform.position);
+            }
+        }
+
         state = State.Chase;
+    }
+
+    public void InterruptCharge()
+    {
+        if (state == State.Charging)
+            EndCharge();
     }
 
     void RefreshJitter()

@@ -57,8 +57,9 @@ MonoBehaviour:
     m_Bits: 128
   hitTriggers: 1
   drawGizmos: 1
-  hitboxVisualPrefab: {fileID: 4334855226144990664, guid: af07f653a325ca74785331889d8a2864, type: 3}
+  hitboxVisualPrefab: {fileID: 0}
   hitboxColor: {r: 1, g: 0.2, b: 0.2, a: 0.35}
+  hitboxFadeDuration: 0.12
   swingClips:
   - {fileID: 8300000, guid: e337c1d8a890958428c098641d64743b, type: 3}
   - {fileID: 8300000, guid: 6a6f49938b70bff45a37c8f2a71b82e9, type: 3}

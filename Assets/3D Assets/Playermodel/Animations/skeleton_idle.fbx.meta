@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 92c7361120c12ca4d9851cf0ba9d70c0
+guid: 16d31ffcd4abb4343bb2f797d8cff8b4
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -17,23 +17,12 @@ ModelImporter:
     removeConstantScaleCurves: 0
     motionNodeName: 
     animationImportErrors: 
-    animationImportWarnings: "\nClip 'Scene' has import animation warnings that might
-      lower retargeting quality:\nNote: Activate translation DOF on avatar to improve
-      retargeting quality.\n\t'hip_bone' is inbetween humanoid transforms and has
-      rotation animation that will be discarded.\n\t'knee_bone.L' is inbetween humanoid
-      transforms and has rotation animation that will be discarded.\n\t'knee_bone.R'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'shoulder_bone.L'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'bicep_anchor.L'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'elbow.L'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'shoulder_bone.R'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'bicep_anchor.R'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'elbow.R'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n"
+    animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 3
+    animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -42,7 +31,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: skeletonRig|runForward
+      name: Idle
       takeName: Scene
       internalID: -623603649343465320
       firstFrame: 1
@@ -69,7 +58,7 @@ ModelImporter:
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0.9
+      additiveReferencePoseFrame: 1
     isReadable: 0
   meshes:
     lODScreenPercentages: []

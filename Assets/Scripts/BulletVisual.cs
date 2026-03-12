@@ -22,6 +22,12 @@ public class BulletVisual : MonoBehaviour
     private void Awake()
     {
         _spawnTime = Time.time;
+
+        Collider col = GetComponent<Collider>();
+        if (col != null) col.enabled = false;
+
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null) rb.isKinematic = true;
     }
 
     private void Update()

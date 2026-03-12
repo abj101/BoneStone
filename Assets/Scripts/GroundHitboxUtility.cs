@@ -30,7 +30,8 @@ public static class GroundHitboxUtility
         float range,
         LayerMask mask,
         out RaycastHit hit,
-        QueryTriggerInteraction queryTriggers = QueryTriggerInteraction.Ignore)
+        QueryTriggerInteraction queryTriggers = QueryTriggerInteraction.Ignore,
+        Transform ignoreRoot = null)
     {
         Vector3 dir = new Vector3(forward.x, 0f, forward.z);
         if (dir.sqrMagnitude < 0.0001f)
@@ -40,7 +41,40 @@ public static class GroundHitboxUtility
         }
 
         dir.Normalize();
-        return Physics.Raycast(origin, dir, out hit, range, mask, queryTriggers);
+
+        if (ignoreRoot == null)
+            return Physics.Raycast(origin, dir, out hit, range, mask, queryTriggers);
+
+        RaycastHit[] hits = Physics.RaycastAll(origin, dir, range, mask, queryTriggers);
+        System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+        for (int i = 0; i < hits.Length; i++)
+        {
+            if (hits[i].collider != null && !hits[i].collider.transform.IsChildOf(ignoreRoot))
+            {
+                hit = hits[i];
+                return true;
+            }
+        }
+
+        hit = default;
+        return false;
+    }
+
+    public static Collider[] OverlapBoxAtWorldPoint(
+        Vector3 worldCenter,
+        Vector2 sizeXZ,
+        float height,
+        LayerMask mask,
+        QueryTriggerInteraction queryTriggers = QueryTriggerInteraction.Collide)
+    {
+        Vector3 halfExtents = new Vector3(
+            Mathf.Max(0f, sizeXZ.x) * 0.5f,
+            Mathf.Max(0.01f, height) * 0.5f,
+            Mathf.Max(0f, sizeXZ.y) * 0.5f
+        );
+
+        return Physics.OverlapBox(worldCenter, halfExtents, Quaternion.identity, mask, queryTriggers);
     }
 
     public static void DrawGizmoBoxOnGround(

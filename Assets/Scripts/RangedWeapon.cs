@@ -13,9 +13,15 @@ public class RangedWeapon : Weapon
     [SerializeField] private float fireCooldown = 0.15f;
     [SerializeField] private Transform muzzle;
 
-    [Header("Visual Bullet (placeholder)")]
+    [Header("Visual Bullet")]
     [SerializeField] private GameObject bulletVisualPrefab;
     [SerializeField] private float bulletSpeed = 25f;
+
+    [Header("Hitscan Line")]
+    [SerializeField] private float lineWidth = 0.06f;
+    [SerializeField] private float lineDuration = 0.12f;
+    [SerializeField] private Color lineColor = new Color(1f, 0.85f, 0.2f, 0.8f);
+    [SerializeField] private float lineGroundOffset = 0.06f;
 
     [Header("Audio")]
     [SerializeField] private AudioClip shootSound;
@@ -43,38 +49,65 @@ public class RangedWeapon : Weapon
         if (dir.sqrMagnitude < 0.0001f) return;
         dir.Normalize();
 
-        Vector3 targetPoint = origin + dir * range;
+        Vector3 endPoint = origin + dir * range;
 
-        if (GroundHitboxUtility.RaycastOnGround(origin, owner.forward, range, hitMask, out RaycastHit hit))
+        if (GroundHitboxUtility.RaycastOnGround(origin, forward, range, hitMask, out RaycastHit hit,
+                ignoreRoot: Owner))
         {
-            targetPoint = hit.point;
+            endPoint = hit.point;
 
-            Health health = hit.collider != null ? hit.collider.GetComponentInParent<Health>() : null;
-            if (health != null && (Owner == null || !health.transform.IsChildOf(Owner)))
+            Health health = hit.collider.GetComponentInParent<Health>();
+            if (health != null)
             {
                 health.TakeDamage(damage, owner.position);
             }
         }
 
-        SpawnBulletVisual(origin, targetPoint);
+        SpawnBulletVisual(origin, endPoint);
+        SpawnHitscanLine(origin, endPoint);
     }
 
     private void SpawnBulletVisual(Vector3 origin, Vector3 target)
     {
         if (bulletVisualPrefab == null) return;
 
-        GameObject bullet = Object.Instantiate(bulletVisualPrefab, origin, Quaternion.identity);
-
+        GameObject bullet = Instantiate(bulletVisualPrefab, origin, Quaternion.identity);
         BulletVisual vis = bullet.GetComponent<BulletVisual>();
         if (vis != null)
-        {
             vis.Initialize(target, bulletSpeed);
-        }
         else
-        {
-            // Fallback: just destroy after a moment so missing component doesn't spam the scene.
-            Object.Destroy(bullet, 2f);
-        }
+            Destroy(bullet, 2f);
+    }
+
+    private void SpawnHitscanLine(Vector3 origin, Vector3 endPoint)
+    {
+        Vector3 groundStart = new Vector3(origin.x, origin.y - 0.8f + lineGroundOffset, origin.z);
+        Vector3 groundEnd = new Vector3(endPoint.x, origin.y - 0.8f + lineGroundOffset, endPoint.z);
+
+        GameObject lineObj = new GameObject("HitscanLine");
+        LineRenderer lr = lineObj.AddComponent<LineRenderer>();
+
+        lr.positionCount = 2;
+        lr.SetPosition(0, groundStart);
+        lr.SetPosition(1, groundEnd);
+
+        lr.startWidth = lineWidth;
+        lr.endWidth = lineWidth;
+        lr.useWorldSpace = true;
+        lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        lr.receiveShadows = false;
+        lr.numCapVertices = 2;
+
+        Material mat = new Material(Shader.Find("Sprites/Default"));
+        mat.color = lineColor;
+        mat.renderQueue = 2450;
+        lr.material = mat;
+
+        lr.startColor = lineColor;
+        lr.endColor = lineColor;
+
+        HitscanLineFade fader = lineObj.AddComponent<HitscanLineFade>();
+        fader.Initialize(lr, lineDuration, lineColor);
     }
 
     private void OnDrawGizmosSelected()
@@ -93,4 +126,3 @@ public class RangedWeapon : Weapon
         Gizmos.DrawLine(origin, origin + dir * range);
     }
 }
-

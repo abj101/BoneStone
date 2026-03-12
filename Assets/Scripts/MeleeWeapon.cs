@@ -14,16 +14,20 @@ public class MeleeWeapon : Weapon
     [SerializeField] private bool hitTriggers = true;
     [SerializeField] private bool drawGizmos = true;
 
-    [Header("Hitbox Visual")]
-    [Tooltip("Assign a prefab: cube mesh, no Collider, transparent/emissive material. If null, a default cube is used.")]
+    [Header("Hitbox Visual (matches bullet/hitscan style)")]
+    [Tooltip("Assign a prefab: flat quad mesh, no Collider, transparent material. If null, a default quad is created.")]
     [SerializeField] private GameObject hitboxVisualPrefab;
-    [SerializeField] private Color hitboxColor = new Color(1f, 0.2f, 0.2f, 0.35f);
+    [SerializeField] private Color hitboxColor = new Color(1f, 0.2f, 0.2f, 0.8f);
+    [SerializeField] private float hitboxFadeDuration = 0.12f;
     [Header("Audio")]
     [SerializeField] private AudioClip[] swingClips;
 
     private Animator _animator;
     private bool _isAttacking;
     private bool _hitboxActive;
+    private bool _hitboxFading;
+    private float _fadeElapsed;
+    private Material _hitboxMaterial;
     private readonly HashSet<int> _hitHealthIdsThisAttack = new HashSet<int>();
     private GameObject _activeVisual;
 
@@ -59,6 +63,25 @@ public class MeleeWeapon : Weapon
 
     private void Update()
     {
+        if (_hitboxFading)
+        {
+            _fadeElapsed += Time.deltaTime;
+            float t = _fadeElapsed / hitboxFadeDuration;
+            if (t >= 1f)
+            {
+                DestroyHitboxVisual();
+                _hitboxFading = false;
+                return;
+            }
+            if (_hitboxMaterial != null)
+            {
+                Color c = hitboxColor;
+                c.a = hitboxColor.a * (1f - t);
+                _hitboxMaterial.color = c;
+            }
+            return;
+        }
+
         if (!_hitboxActive) return;
 
         if (_activeVisual != null)
@@ -80,41 +103,31 @@ public class MeleeWeapon : Weapon
     {
         _hitboxActive = false;
         _isAttacking = false;
-        DestroyHitboxVisual();
+        if (_activeVisual != null && hitboxFadeDuration > 0f)
+        {
+            _hitboxFading = true;
+            _fadeElapsed = 0f;
+        }
+        else
+            DestroyHitboxVisual();
     }
 
     private void SpawnHitboxVisual()
     {
         DestroyHitboxVisual();
 
-        Transform origin = Owner != null ? Owner : transform;
+        _activeVisual = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        Destroy(_activeVisual.GetComponent<Collider>());
 
-        if (hitboxVisualPrefab != null)
+        Renderer rend = _activeVisual.GetComponent<Renderer>();
+        if (rend != null)
         {
-            _activeVisual = Instantiate(hitboxVisualPrefab, origin);
-        }
-        else
-        {
-            _activeVisual = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            Destroy(_activeVisual.GetComponent<Collider>());
-
-            Renderer rend = _activeVisual.GetComponent<Renderer>();
-            if (rend != null)
-            {
-                Material mat = new Material(Shader.Find("Standard"));
-                mat.SetFloat("_Mode", 3f);
-                mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                mat.SetInt("_ZWrite", 0);
-                mat.DisableKeyword("_ALPHATEST_ON");
-                mat.EnableKeyword("_ALPHABLEND_ON");
-                mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-                mat.renderQueue = 3000;
-                mat.color = hitboxColor;
-                rend.material = mat;
-            }
-
-            _activeVisual.transform.SetParent(origin);
+            _hitboxMaterial = new Material(Shader.Find("Sprites/Default"));
+            _hitboxMaterial.color = hitboxColor;
+            _hitboxMaterial.renderQueue = 2450;
+            rend.material = _hitboxMaterial;
+            rend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            rend.receiveShadows = false;
         }
 
         UpdateVisualTransform(_activeVisual.transform);
@@ -124,9 +137,16 @@ public class MeleeWeapon : Weapon
     {
         Transform origin = Owner != null ? Owner : transform;
 
-        visual.position = origin.TransformPoint(localOffset);
-        visual.rotation = Quaternion.Euler(0f, origin.eulerAngles.y, 0f);
-        visual.localScale = new Vector3(sizeXZ.x, height, sizeXZ.y);
+        Vector3 center = origin.TransformPoint(localOffset);
+
+        if (Physics.Raycast(new Vector3(center.x, center.y + 2f, center.z), Vector3.down, out RaycastHit groundHit, 10f))
+            center.y = groundHit.point.y + 0.05f;
+        else
+            center.y = origin.position.y - 1f + 0.05f;
+
+        visual.position = center;
+        visual.rotation = Quaternion.Euler(90f, origin.eulerAngles.y, 0f);
+        visual.localScale = new Vector3(sizeXZ.x, sizeXZ.y, 1f);
     }
 
     private void DestroyHitboxVisual()
@@ -136,6 +156,7 @@ public class MeleeWeapon : Weapon
             Destroy(_activeVisual);
             _activeVisual = null;
         }
+        _hitboxMaterial = null;
     }
 
     private void DoDamageSweep()
@@ -185,6 +206,7 @@ public class MeleeWeapon : Weapon
     {
         DestroyHitboxVisual();
         _hitboxActive = false;
+        _hitboxFading = false;
         _isAttacking = false;
     }
 }

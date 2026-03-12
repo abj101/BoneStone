@@ -149,7 +149,7 @@ MonoBehaviour:
   maxHealth: 50
   invulnerabilityDuration: 0.5
   destroyOnDeath: 1
-  flashDuration: 0.12
+  flashDuration: 0.5
   flashColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &1484503428556105505
 MonoBehaviour:

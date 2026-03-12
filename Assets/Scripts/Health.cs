@@ -7,7 +7,7 @@ public class Health : MonoBehaviour
     [Header("Health Settings")]
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private float invulnerabilityDuration = 0.5f;
-    [SerializeField] private bool destroyOnDeath = true;
+    [SerializeField] public bool destroyOnDeath = true;
 
     [Header("Damage Flash")]
     [SerializeField] private float flashDuration = 0.12f;

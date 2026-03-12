@@ -1,29 +1,88 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemySpawner : MonoBehaviour
 {
+    [Header("Spawning")]
     public GameObject enemyPrefab;
-    public int numberOfEnemies = 5;
     public float spawnRadius = 15f;
+
+    [Header("Waves")]
+    [Tooltip("Each element is the enemy count for that wave. E.g. [1, 5, 10]")]
+    public int[] waveSizes = { 1, 5, 10 };
+
+    [Tooltip("Seconds to wait before spawning the next wave after the current is cleared.")]
+    public float delayBetweenWaves = 2f;
+
+    public int CurrentWave { get; private set; }
+    public bool AllWavesCleared { get; private set; }
+
+    public event Action<int> OnWaveStarted;
+    public event Action<int> OnWaveCleared;
+    public event Action OnAllWavesCleared;
+
+    private readonly List<GameObject> _activeEnemies = new List<GameObject>();
 
     void Start()
     {
-        for (int i = 0; i < numberOfEnemies; i++)
+        if (waveSizes == null || waveSizes.Length == 0)
         {
-            SpawnEnemy();
+            AllWavesCleared = true;
+            OnAllWavesCleared?.Invoke();
+            return;
+        }
+
+        CurrentWave = 0;
+        StartCoroutine(RunWaves());
+    }
+
+    private IEnumerator RunWaves()
+    {
+        for (int w = 0; w < waveSizes.Length; w++)
+        {
+            CurrentWave = w;
+            SpawnWave(waveSizes[w]);
+            OnWaveStarted?.Invoke(w);
+
+            while (_activeEnemies.Count > 0)
+            {
+                _activeEnemies.RemoveAll(e => e == null);
+                yield return null;
+            }
+
+            OnWaveCleared?.Invoke(w);
+
+            if (w < waveSizes.Length - 1)
+                yield return new WaitForSeconds(delayBetweenWaves);
+        }
+
+        AllWavesCleared = true;
+        OnAllWavesCleared?.Invoke();
+    }
+
+    private void SpawnWave(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            GameObject enemy = SpawnEnemy();
+            if (enemy != null)
+                _activeEnemies.Add(enemy);
         }
     }
 
-    void SpawnEnemy()
+    private GameObject SpawnEnemy()
     {
-        Vector3 randomDirection = Random.insideUnitSphere * spawnRadius;
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * spawnRadius;
         randomDirection += transform.position;
 
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(randomDirection, out hit, spawnRadius, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, spawnRadius, NavMesh.AllAreas))
         {
-            Instantiate(enemyPrefab, hit.position, Quaternion.identity);
+            return Instantiate(enemyPrefab, hit.position, Quaternion.identity);
         }
+
+        return null;
     }
 }

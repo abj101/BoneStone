@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 2325970511330395252}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.67, y: -0.905, z: 0.083}
+  m_LocalPosition: {x: -0.67, y: 0.11, z: 0.083}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -56,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 3718542164635664287}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.708, y: -0.905, z: 0.083}
+  m_LocalPosition: {x: 0.708, y: 0.14, z: 0.083}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -201,6 +201,8 @@ MonoBehaviour:
   _speed: 5
   _turnSpeed: 360
   _gravity: -9.81
+  _knockbackDecay: 10
+  _animator: {fileID: 0}
 --- !u!114 &3504916660022288136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,6 +277,8 @@ MonoBehaviour:
   _invulnColor: {r: 1, g: 1, b: 1, a: 0.6}
   _cooldown: 0.5
   _dashAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _dashSound: {fileID: 0}
+  _audioSource: {fileID: 0}
 --- !u!114 &5613523051250514438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,7 +335,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9c0dce8ec6b5b1b4099b000bf0503d02, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.91196
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9c0dce8ec6b5b1b4099b000bf0503d02, type: 3}
       propertyPath: m_LocalPosition.z
