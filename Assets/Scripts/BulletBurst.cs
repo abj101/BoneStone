@@ -58,8 +58,12 @@ public class BulletBurst : MonoBehaviour
 
     IEnumerator ShowTracer(LineRenderer tracer, Vector3 start, Vector3 end)
     {
+        tracer.enabled = false;
+
         tracer.SetPosition(0, start);
         tracer.SetPosition(1, end);
+
+        tracer.enabled = true;
 
         yield return new WaitForSeconds(tracerTime);
 
