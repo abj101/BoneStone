@@ -8,6 +8,13 @@ public class EnemyAI : MonoBehaviour
     private Transform player;
     private Health playerHealth;
 
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private RuntimeAnimatorController enemyController;
+    [SerializeField] private float moveBlendDampTime = 0.1f;
+
+    private static readonly int BlendHash = Animator.StringToHash("movement");
+
     [Header("Detection")]
     public float awarenessRadius = 12f;
     public float jitterRadius = 1.5f;
@@ -30,6 +37,9 @@ public class EnemyAI : MonoBehaviour
     private float jitterRefreshTimer;
     private float _baseOffset;
 
+    private float _currentBlend;
+    private float _blendVel;
+
     private enum State { Idle, Chase, ChargeWindup, Charging }
     private State state = State.Idle;
 
@@ -37,6 +47,13 @@ public class EnemyAI : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         _baseOffset = agent != null ? agent.baseOffset : 0f;
+
+        if (animator == null)
+            animator = GetComponentInChildren<Animator>();
+
+        if (animator != null && animator.runtimeAnimatorController == null && enemyController != null)
+            animator.runtimeAnimatorController = enemyController;
+
         var go = GameObject.FindGameObjectWithTag("Player");
         player = go.transform;
         playerHealth = go.GetComponent<Health>();
@@ -55,6 +72,8 @@ public class EnemyAI : MonoBehaviour
             case State.ChargeWindup: UpdateWindup();   break;
             case State.Charging:     UpdateCharging(); break;
         }
+
+        UpdateAnimation();
     }
 
     void UpdateIdle()
@@ -182,6 +201,19 @@ public class EnemyAI : MonoBehaviour
         }
 
         state = State.Chase;
+    }
+
+    void UpdateAnimation()
+    {
+        if (animator == null || agent == null) return;
+        if (animator.runtimeAnimatorController == null) return;
+
+        // Use agent speed to drive Blend (0 = idle, 1 = moving)
+        float speed = agent.velocity.magnitude;
+        float targetBlend = speed > 0.1f ? 1f : 0f;
+
+        _currentBlend = Mathf.SmoothDamp(_currentBlend, targetBlend, ref _blendVel, moveBlendDampTime);
+        animator.SetFloat(BlendHash, _currentBlend);
     }
 
     public void InterruptCharge()

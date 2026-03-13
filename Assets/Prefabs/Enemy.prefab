@@ -122,6 +122,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 952d67416e02178458fe2a096eaf9cfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  animator: {fileID: 0}
+  enemyController: {fileID: 9100000, guid: b2ea976e7571dd34b9c32edb26f74172, type: 2}
+  moveBlendDampTime: 0.1
   awarenessRadius: 10
   jitterRadius: 2
   reaggroCooldown: 0.2
@@ -236,6 +239,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ca488807793a99445b15f752ea0cf2d2, type: 3}
       propertyPath: m_Name
       value: enemyRig
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: ca488807793a99445b15f752ea0cf2d2, type: 3}
+      propertyPath: m_Controller
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -79,10 +79,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RangedWeapon
   damage: 20
-  range: 12
+  range: 8
   hitMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 135
   fireCooldown: 0.15
   muzzle: {fileID: 2593107345949964911}
   bulletVisualPrefab: {fileID: 7683245229231144685, guid: ac6d503da1c53a0419e578a7df9af14c, type: 3}
