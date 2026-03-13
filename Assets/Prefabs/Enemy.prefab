@@ -57,7 +57,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.3429312
+  m_Radius: 1.8
   m_Height: 2.6858623
   m_Direction: 1
   m_Center: {x: 0, y: 0.25027013, z: 0.058412194}
@@ -71,8 +71,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3
-  m_Acceleration: 8
+  m_Speed: 5
+  m_Acceleration: 10
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0
@@ -122,14 +122,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 952d67416e02178458fe2a096eaf9cfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
-  awarenessRadius: 6
+  awarenessRadius: 10
   jitterRadius: 2
   reaggroCooldown: 0.2
   damage: 10
-  attackRange: 4
+  attackRange: 6
   attackCooldown: 2
   chargeDuration: 1
-  chargeSpeed: 7
+  chargeSpeed: 15
   knockbackForce: 10
   playerLayer:
     serializedVersion: 2

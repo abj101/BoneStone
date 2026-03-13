@@ -81,6 +81,7 @@ GameObject:
   - component: {fileID: 6699818349740173475}
   - component: {fileID: 5613523051250514438}
   - component: {fileID: -2298091292658832013}
+  - component: {fileID: 980851559071528436}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -199,7 +200,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   _speed: 5
-  _turnSpeed: 360
+  _turnSpeed: 800
+  _moveSmoothTime: 0.08
   _gravity: -9.81
   _knockbackDecay: 10
   _animator: {fileID: 0}
@@ -309,6 +311,25 @@ MonoBehaviour:
   rightWeaponSocket: {fileID: 5526815095229129084}
   leftDefaultWeapon: {fileID: 8734682219450012345, guid: 7e96c5ed083b0574f8cc6414abf7bc6c, type: 3}
   rightDefaultWeapon: {fileID: 6494186059507480152, guid: 626a7dbf2f8a49042bc3d8a355947781, type: 3}
+--- !u!114 &980851559071528436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4341629439400432340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab45947180c8b2b41be1fd83682fa111, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAimIndicator
+  circleRadius: 0.65
+  circleSegments: 48
+  lineWidth: 0.04
+  circleColor: {r: 1, g: 1, b: 1, a: 0.85}
+  triSize: 0.18
+  triColor: {r: 1, g: 1, b: 1, a: 0.95}
+  groundOffset: 0.06
 --- !u!1001 &4078059834442296737
 PrefabInstance:
   m_ObjectHideFlags: 0
