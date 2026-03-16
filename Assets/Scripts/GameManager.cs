@@ -67,18 +67,16 @@ public class GameManager : MonoBehaviour
         ShowEndScreen("VICTORY");
     }
 
-    private void ShowEndScreen(string message)
+    private void ShowEndScreen(string text)
     {
         if (_gameOver) return;
         _gameOver = true;
 
         if (playerHealth != null)
-        {
             DisablePlayerControls(playerHealth.gameObject);
-        }
 
         if (resultLabel != null)
-            resultLabel.text = message;
+            resultLabel.text = text;
 
         endScreenPanel.SetActive(true);
         Time.timeScale = 0f;
@@ -143,6 +141,8 @@ public class GameManager : MonoBehaviour
         mainMenuButton = CreateButton(endScreenPanel.transform, "MenuBtn",
             "MAIN MENU", new Vector2(0, -110), 28);
         mainMenuButton.onClick.AddListener(ReturnToMenu);
+
+        endScreenPanel.AddComponent<HighContrastUITheme>();
     }
 
     private TextMeshProUGUI CreateTMPLabel(Transform parent, string name, string text, float fontSize, Vector2 pos)

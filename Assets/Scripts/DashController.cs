@@ -18,6 +18,7 @@ public class DashController : MonoBehaviour
 
     [Header("Input")]
     [SerializeField] private InputActionReference _dashAction;
+    [SerializeField] private InputActionReference _moveAction;
 
     [Header("Audio")]
     [SerializeField] private AudioClip _dashSound;
@@ -85,7 +86,8 @@ public class DashController : MonoBehaviour
         if(_audioSource != null && _dashSound != null)
             _audioSource.PlayOneShot(_dashSound);
 
-        Vector3 input = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        Vector2 move2 = _moveAction != null ? _moveAction.action.ReadValue<Vector2>() : Vector2.zero;
+        Vector3 input = new Vector3(move2.x, 0f, move2.y);
         _dashDirection = input.sqrMagnitude > 0.001f
             ? input.ToIso().normalized
             : transform.forward;

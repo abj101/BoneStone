@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 public class PlayerFootsteps : MonoBehaviour
 {
     public AudioClip footstepClip;
@@ -6,6 +8,8 @@ public class PlayerFootsteps : MonoBehaviour
     public float stepInterval = 0.4f; // Time between each step
     [Range(0f, 1f)] public float footstepVolume = 1f; // Volume of footstep sound
     [Range(0f, 1f)] public float boneVolume = 0.1f; // Volume of bone sound
+    [Tooltip("Optional: use Input System Move action for rebinding support.")]
+    [SerializeField] private InputActionReference _moveAction;
     private AudioSource audioSource;
     private Rigidbody rb;
     private float stepTimer;
@@ -17,9 +21,18 @@ public class PlayerFootsteps : MonoBehaviour
     }
     void Update()
     {
-        // Player input
-        float inputX = Input.GetAxis("Horizontal");
-        float inputZ = Input.GetAxis("Vertical");
+        float inputX, inputZ;
+        if (_moveAction != null && _moveAction.action != null)
+        {
+            Vector2 m = _moveAction.action.ReadValue<Vector2>();
+            inputX = m.x;
+            inputZ = m.y;
+        }
+        else
+        {
+            inputX = Input.GetAxis("Horizontal");
+            inputZ = Input.GetAxis("Vertical");
+        }
         bool isMoving = Mathf.Abs(inputX) > 0.1f || Mathf.Abs(inputZ) > 0.1f;
         if (isMoving)
         {

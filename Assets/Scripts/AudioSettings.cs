@@ -4,21 +4,16 @@ using UnityEngine.UI;
 
 public class AudioSettings : MonoBehaviour
 {
-    // UI Slider for volume channel
     public AudioMixer mainMixer;
     public Slider masterSlider;
     public Slider musicSlider;
     public Slider SfxSlider;
-    // Panel references for switching between menus
-    public GameObject settingsPanel;
-    public GameObject mainMenuPanel;
 
-    // Load saved volume settings when the menu starts
     void Start()
     {
         masterSlider.value = PlayerPrefs.GetFloat("MasterVolume", 0.75f);
-        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
-        SfxSlider.value = PlayerPrefs.GetFloat("SfxVolume", 0.75f);
+        musicSlider.value  = PlayerPrefs.GetFloat("MusicVolume",  0.75f);
+        SfxSlider.value    = PlayerPrefs.GetFloat("SfxVolume",    0.75f);
         SetMasterVolume(masterSlider.value);
         SetMusicVolume(musicSlider.value);
         SetSfxVolume(SfxSlider.value);
@@ -44,17 +39,4 @@ public class AudioSettings : MonoBehaviour
         mainMixer.SetFloat("SFXVolume", db);
         PlayerPrefs.SetFloat("SfxVolume", value);
     }
-
-    public void OpenSettings()
-    {
-        settingsPanel.SetActive(true);
-        mainMenuPanel.SetActive(false);
-    }
-
-    public void CloseSettings()
-    {
-        settingsPanel.SetActive(false);
-        mainMenuPanel.SetActive(true);
-    }
-
 }

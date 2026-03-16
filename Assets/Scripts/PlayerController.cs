@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
@@ -14,6 +15,10 @@ public class PlayerController : MonoBehaviour
 
     [Header("Animation")]
     [SerializeField] private Animator _animator;
+
+    [Header("Input")]
+    [SerializeField] private InputActionReference _moveAction;
+    [SerializeField] private InputActionReference _lookAction;
 
     private static readonly int MoveX = Animator.StringToHash("localMoveVectorX");
     private static readonly int MoveY = Animator.StringToHash("localMoveVectorY");
@@ -56,12 +61,20 @@ public class PlayerController : MonoBehaviour
     {
         if (_health != null)
             _health.OnKnockback += OnKnockback;
+        if (_moveAction != null)
+            _moveAction.action.Enable();
+        if (_lookAction != null)
+            _lookAction.action.Enable();
     }
 
     private void OnDisable()
     {
         if (_health != null)
             _health.OnKnockback -= OnKnockback;
+        if (_moveAction != null)
+            _moveAction.action.Disable();
+        if (_lookAction != null)
+            _lookAction.action.Disable();
     }
 
     private void OnKnockback(Vector3 force)
@@ -82,28 +95,25 @@ public class PlayerController : MonoBehaviour
     {
         UpdateMouseAimMode();
 
-        // Left stick / WASD — movement only, never affects facing
-        _rawInput = new Vector3(
-            Input.GetAxisRaw("Horizontal"),
-            0f,
-            Input.GetAxisRaw("Vertical")
-        );
+        // Move: Input System Vector2 (WASD / left stick)
+        Vector2 move2 = _moveAction != null ? _moveAction.action.ReadValue<Vector2>() : Vector2.zero;
+        _rawInput = new Vector3(move2.x, 0f, move2.y);
 
-        // Right stick — explicit aim, takes priority (gamepad)
-        float aimX = Input.GetAxisRaw("RightStickHorizontal");
-        float aimY = Input.GetAxisRaw("RightStickVertical");
-        if (aimX * aimX + aimY * aimY > 0.04f)
+        // Look: gamepad right stick takes priority
+        Vector2 look2 = _lookAction != null ? _lookAction.action.ReadValue<Vector2>() : Vector2.zero;
+        if (look2.sqrMagnitude > 0.04f)
         {
-            Vector3 stickDir = new Vector3(aimX, 0f, aimY).ToIso();
+            Vector3 stickDir = new Vector3(look2.x, 0f, look2.y).ToIso();
             if (stickDir.sqrMagnitude > 0.001f)
                 _lastFacingDir = stickDir.normalized;
             return;
         }
 
-        // Mouse — aim toward cursor world position on ground plane (only when not using gamepad)
-        if (_useMouseAim && _cam != null)
+        // Mouse: aim toward cursor world position on ground plane
+        if (_useMouseAim && _cam != null && Mouse.current != null)
         {
-            Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
+            Vector2 mousePos = Mouse.current.position.ReadValue();
+            Ray ray = _cam.ScreenPointToRay(mousePos);
             if (_groundPlane.Raycast(ray, out float enter))
             {
                 Vector3 worldPoint = ray.GetPoint(enter);
@@ -117,28 +127,19 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateMouseAimMode()
     {
-        // Disable mouse aim when any gamepad control is received
-        float aimX = Input.GetAxisRaw("RightStickHorizontal");
-        float aimY = Input.GetAxisRaw("RightStickVertical");
-        if (aimX * aimX + aimY * aimY > 0.04f)
-            _useMouseAim = false;
-
-        for (int i = 0; i < 20; i++)
+        // Disable mouse aim when gamepad right stick is used
+        Vector2 look2 = _lookAction != null ? _lookAction.action.ReadValue<Vector2>() : Vector2.zero;
+        if (look2.sqrMagnitude > 0.04f)
         {
-            if (Input.GetKey((KeyCode)((int)KeyCode.JoystickButton0 + i)))
-            {
-                _useMouseAim = false;
-                break;
-            }
+            _useMouseAim = false;
+            return;
         }
-
         // Re-enable when keyboard or mouse is used
-        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2))
+        if (Keyboard.current != null && (Keyboard.current.wKey.wasPressedThisFrame || Keyboard.current.aKey.wasPressedThisFrame ||
+            Keyboard.current.sKey.wasPressedThisFrame || Keyboard.current.dKey.wasPressedThisFrame ||
+            Keyboard.current.spaceKey.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame))
             _useMouseAim = true;
-
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) ||
-            Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) ||
-            Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.F))
+        if (Mouse.current != null && (Mouse.current.leftButton.wasPressedThisFrame || Mouse.current.rightButton.wasPressedThisFrame || Mouse.current.middleButton.wasPressedThisFrame))
             _useMouseAim = true;
     }
 
@@ -148,12 +149,10 @@ public class PlayerController : MonoBehaviour
 
         _knockbackVelocity = Vector3.Lerp(_knockbackVelocity, Vector3.zero, _knockbackDecay * Time.deltaTime);
 
-        // Convert raw input to iso world direction
         Vector3 targetMove = Vector3.zero;
         if (_rawInput.sqrMagnitude > 0.001f)
             targetMove = _rawInput.ToIso().normalized * _speed;
 
-        // Smooth the horizontal movement to avoid pivoting
         _smoothMove = Vector3.SmoothDamp(_smoothMove, targetMove, ref _smoothMoveVel, _moveSmoothTime);
 
         Vector3 finalMove = _smoothMove;
