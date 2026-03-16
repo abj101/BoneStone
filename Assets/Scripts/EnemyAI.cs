@@ -15,6 +15,11 @@ public class EnemyAI : MonoBehaviour
 
     private static readonly int BlendHash = Animator.StringToHash("movement");
 
+    [Header("Movement")]
+    [Tooltip("If angle to target exceeds this (degrees), enemy stops and rotates in place like a tank")]
+    public float tankTurnAngle = 90f;
+    public float tankTurnSpeed = 10f;
+
     [Header("Detection")]
     public float awarenessRadius = 12f;
     public float jitterRadius = 1.5f;
@@ -99,7 +104,26 @@ public class EnemyAI : MonoBehaviour
             return;
         }
 
-        agent.SetDestination(player.position + jitterOffset);
+        Vector3 targetPos = player.position + jitterOffset;
+        Vector3 toTarget = targetPos - transform.position;
+        toTarget.y = 0f;
+        float toTargetMag = toTarget.sqrMagnitude;
+        bool mustTurnInPlace = toTargetMag > 0.001f && Vector3.Angle(transform.forward, toTarget.normalized) > tankTurnAngle;
+
+        if (mustTurnInPlace)
+        {
+            // Stay in place and rotate like a tank until within tankTurnAngle
+            agent.SetDestination(transform.position);
+            agent.isStopped = true;
+            agent.updateRotation = false;
+            transform.forward = Vector3.Lerp(transform.forward, toTarget.normalized, Time.deltaTime * tankTurnSpeed);
+        }
+        else
+        {
+            agent.updateRotation = true;
+            agent.isStopped = false;
+            agent.SetDestination(targetPos);
+        }
 
         if (dist <= attackRange && Time.time >= lastAttackTime + attackCooldown)
             EnterWindup();
@@ -129,6 +153,8 @@ public class EnemyAI : MonoBehaviour
     {
         chargeDuration_elapsed += Time.deltaTime;
 
+        // Keep facing the dash direction so we don't drift/rotate while moving
+        transform.forward = chargeDirection;
         agent.velocity = chargeDirection * chargeSpeed;
 
         Vector3 feetPos = transform.position - Vector3.up * _baseOffset;
@@ -154,6 +180,7 @@ public class EnemyAI : MonoBehaviour
     {
         state = State.Chase;
         agent.isStopped = false;
+        agent.updateRotation = true;
     }
 
     void EnterIdle()
@@ -169,6 +196,7 @@ public class EnemyAI : MonoBehaviour
         state = State.ChargeWindup;
         chargeDuration_elapsed = 0f;
         agent.isStopped = true;
+        agent.updateRotation = false; // Rotate in place while aiming
     }
 
     void EnterCharge()
@@ -178,10 +206,12 @@ public class EnemyAI : MonoBehaviour
 
         agent.ResetPath();
         agent.isStopped = false;
+        agent.updateRotation = false; // Don't rotate during dash
 
         Vector3 toPlayer = player.position - transform.position;
         toPlayer.y = 0f;
         chargeDirection = toPlayer.normalized;
+        transform.forward = chargeDirection; // Lock facing to dash direction
 
         lastAttackTime = Time.time;
     }
@@ -189,6 +219,7 @@ public class EnemyAI : MonoBehaviour
     void EndCharge()
     {
         agent.velocity = Vector3.zero;
+        agent.updateRotation = true;
 
         if (!agent.isOnNavMesh)
         {
@@ -208,8 +239,8 @@ public class EnemyAI : MonoBehaviour
         if (animator == null || agent == null) return;
         if (animator.runtimeAnimatorController == null) return;
 
-        // Use agent speed to drive Blend (0 = idle, 1 = moving)
-        float speed = agent.velocity.magnitude;
+        // Use both velocity (set during charge) and desiredVelocity (chase) so walk plays when moving and when dashing
+        float speed = Mathf.Max(agent.velocity.magnitude, agent.desiredVelocity.magnitude);
         float targetBlend = speed > 0.1f ? 1f : 0f;
 
         _currentBlend = Mathf.SmoothDamp(_currentBlend, targetBlend, ref _blendVel, moveBlendDampTime);

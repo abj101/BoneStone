@@ -1782,8 +1782,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   enemyPrefab: {fileID: 2537564534069962433, guid: 47e29f2e20a71ff409197f66584e6f2b, type: 3}
-  spawnRadius: 13
-  waveSizes: 0a000000
+  spawnRadius: 10
+  waveSizes: 01000000
   delayBetweenWaves: 3
 --- !u!4 &243877725
 Transform:
@@ -8595,6 +8595,10 @@ PrefabInstance:
       propertyPath: circleRadius
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2052205784163747323, guid: f8f69f212f45a234e81eb0ce3595bddd, type: 3}
+      propertyPath: _speed
+      value: 7.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3772120938157805808, guid: f8f69f212f45a234e81eb0ce3595bddd, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -8794,7 +8798,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFootsteps
   footstepClip: {fileID: 8300000, guid: 8c2c6c300bd8fc441878f426377bec64, type: 3}
   boneClip: {fileID: 8300000, guid: dc9efda75e44a4fba9b01fe0d43b5966, type: 3}
-  stepInterval: 0.58
+  stepInterval: 0.3
+  footstepVolume: 0.207
   boneVolume: 0.1
 --- !u!114 &1835388726 stripped
 MonoBehaviour:
