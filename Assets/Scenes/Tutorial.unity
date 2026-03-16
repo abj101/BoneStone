@@ -6746,7 +6746,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42ccaca3a6decc240a836a4da51a21ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimeSlowCooldownUI
-  timeSlowController: {fileID: 1835388736}
+  timeSlowController: {fileID: 1835388737}
   cooldownOverlay: {fileID: 1434431947}
 --- !u!114 &1434431947
 MonoBehaviour:
@@ -8682,6 +8682,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4500742711214567768, guid: f8f69f212f45a234e81eb0ce3595bddd, type: 3}
+      propertyPath: timeSlowAction
+      value: 
+      objectReference: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     - target: {fileID: 980851559071528436, guid: f8f69f212f45a234e81eb0ce3595bddd, type: 3}
       propertyPath: circleRadius
       value: 0.5
@@ -8913,10 +8917,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd4ea336d749d6247914fa367d19bb88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimeSlowController
-  slowKey: 304
+  timeSlowAction: {fileID: 0}
   slowAmount: 0.3
   slowDuration: 2
   cooldown: 5
+--- !u!114 &1835388737 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -4500742711214567768, guid: f8f69f212f45a234e81eb0ce3595bddd, type: 3}
+  m_PrefabInstance: {fileID: 1835388720}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835388721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd4ea336d749d6247914fa367d19bb88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimeSlowController
 --- !u!4 &1836321807 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6670234744341657123, guid: c79d59d66358e0f45a098f4b8a82f8be, type: 3}

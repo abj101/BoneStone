@@ -1,9 +1,10 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using System.Collections;
 
 public class TimeSlowController : MonoBehaviour
 {
-    public KeyCode slowKey = KeyCode.LeftShift;
+    [SerializeField] private InputActionReference timeSlowAction;
     public float slowAmount = 0.3f;
     public float slowDuration = 2f;
     public float cooldown = 5f;
@@ -20,7 +21,19 @@ public class TimeSlowController : MonoBehaviour
         }
     }
 
-    void Update()
+    private void OnEnable()
+    {
+        if (timeSlowAction != null)
+            timeSlowAction.action.performed += OnTimeSlowPerformed;
+    }
+
+    private void OnDisable()
+    {
+        if (timeSlowAction != null)
+            timeSlowAction.action.performed -= OnTimeSlowPerformed;
+    }
+
+    private void Update()
     {
         if (!canSlow)
         {
@@ -31,11 +44,12 @@ public class TimeSlowController : MonoBehaviour
                 canSlow = true;
             }
         }
+    }
 
-        if (Input.GetKeyDown(slowKey) && canSlow)
-        {
+    private void OnTimeSlowPerformed(InputAction.CallbackContext context)
+    {
+        if (canSlow)
             StartCoroutine(SlowTime());
-        }
     }
 
     private IEnumerator SlowTime()
