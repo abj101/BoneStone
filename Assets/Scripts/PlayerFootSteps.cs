@@ -4,7 +4,8 @@ public class PlayerFootsteps : MonoBehaviour
     public AudioClip footstepClip;
     public AudioClip boneClip;
     public float stepInterval = 0.4f; // Time between each step
-    public float boneVolume = 0.1f; // Volume of bone sound
+    [Range(0f, 1f)] public float footstepVolume = 1f; // Volume of footstep sound
+    [Range(0f, 1f)] public float boneVolume = 0.1f; // Volume of bone sound
     private AudioSource audioSource;
     private Rigidbody rb;
     private float stepTimer;
@@ -25,7 +26,7 @@ public class PlayerFootsteps : MonoBehaviour
             if (stepTimer <= 0f)
             {
                 audioSource.pitch = Random.Range(0.95f, 1.05f); // Randomize pitch so steps sound more natural
-                audioSource.PlayOneShot(footstepClip);
+                audioSource.PlayOneShot(footstepClip, footstepVolume);
                 audioSource.PlayOneShot(boneClip, boneVolume);
                 stepTimer = stepInterval; // Reset timer
             }

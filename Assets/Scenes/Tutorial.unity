@@ -1782,8 +1782,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   enemyPrefab: {fileID: 2537564534069962433, guid: 47e29f2e20a71ff409197f66584e6f2b, type: 3}
-  spawnRadius: 13
-  waveSizes: 0a000000
+  spawnRadius: 10
+  waveSizes: 01000000
   delayBetweenWaves: 3
 --- !u!4 &243877725
 Transform:
@@ -3095,7 +3095,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &491063566
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3109,11 +3109,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1082088426}
+  - {fileID: 1434431945}
   m_Father: {fileID: 194111237}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 62.5, y: -150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 125, y: 125}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &491063567
@@ -3129,7 +3130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.21960784, g: 0.21960784, b: 0.21960784, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5406,7 +5407,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: LSHIFT
+  m_text: Slow
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6566,6 +6567,96 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd2de4bd876f4ac4980370e624362931, type: 3}
+--- !u!1 &1434431944
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1434431945}
+  - component: {fileID: 1434431948}
+  - component: {fileID: 1434431947}
+  - component: {fileID: 1434431946}
+  m_Layer: 5
+  m_Name: TimeSlowCoolDownOverlay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1434431945
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434431944}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.1, y: 1.1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 491063566}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1434431946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434431944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42ccaca3a6decc240a836a4da51a21ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimeSlowCooldownUI
+  timeSlowController: {fileID: 1835388737}
+  cooldownOverlay: {fileID: 1434431947}
+--- !u!114 &1434431947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434431944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.3, g: 0.3, b: 0.3, a: 0.8627451}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 3
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 1
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1434431948
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434431944}
+  m_CullTransparentMesh: 1
 --- !u!1001 &1446196508
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8462,9 +8553,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4500742711214567768, guid: f8f69f212f45a234e81eb0ce3595bddd, type: 3}
+      propertyPath: timeSlowAction
+      value: 
+      objectReference: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     - target: {fileID: 980851559071528436, guid: f8f69f212f45a234e81eb0ce3595bddd, type: 3}
       propertyPath: circleRadius
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2052205784163747323, guid: f8f69f212f45a234e81eb0ce3595bddd, type: 3}
+      propertyPath: _speed
+      value: 7.5
       objectReference: {fileID: 0}
     - target: {fileID: 3772120938157805808, guid: f8f69f212f45a234e81eb0ce3595bddd, type: 3}
       propertyPath: m_IsActive
@@ -8548,6 +8647,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4341629439400432340, guid: f8f69f212f45a234e81eb0ce3595bddd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1835388723}
+    - targetCorrespondingSourceObject: {fileID: 4341629439400432340, guid: f8f69f212f45a234e81eb0ce3595bddd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1835388736}
   m_SourcePrefab: {fileID: 100100000, guid: f8f69f212f45a234e81eb0ce3595bddd, type: 3}
 --- !u!1 &1835388721 stripped
 GameObject:
@@ -8665,7 +8767,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFootsteps
   footstepClip: {fileID: 8300000, guid: 8c2c6c300bd8fc441878f426377bec64, type: 3}
   boneClip: {fileID: 8300000, guid: dc9efda75e44a4fba9b01fe0d43b5966, type: 3}
-  stepInterval: 0.58
+  stepInterval: 0.3
+  footstepVolume: 0.207
   boneVolume: 0.1
 --- !u!114 &1835388726 stripped
 MonoBehaviour:
@@ -8678,6 +8781,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adcc3feccba4b264e8260dd4efb769ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DashController
+--- !u!114 &1835388736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835388721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd4ea336d749d6247914fa367d19bb88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimeSlowController
+  timeSlowAction: {fileID: 0}
+  slowAmount: 0.3
+  slowDuration: 2
+  cooldown: 5
+--- !u!114 &1835388737 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -4500742711214567768, guid: f8f69f212f45a234e81eb0ce3595bddd, type: 3}
+  m_PrefabInstance: {fileID: 1835388720}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835388721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd4ea336d749d6247914fa367d19bb88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimeSlowController
 --- !u!4 &1836321807 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6670234744341657123, guid: c79d59d66358e0f45a098f4b8a82f8be, type: 3}

@@ -9,7 +9,6 @@ public class MeleeWeapon : Weapon
     [Header("Cone Hitbox")]
     [SerializeField] private float coneRadius = 2f;
     [SerializeField] private float coneAngle = 90f;
-    [SerializeField] private float height = 1f;
     [SerializeField] private LayerMask hitMask = ~0;
     [SerializeField] private bool hitTriggers = true;
     [SerializeField] private bool drawGizmos = true;

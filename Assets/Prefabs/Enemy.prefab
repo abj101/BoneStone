@@ -125,14 +125,16 @@ MonoBehaviour:
   animator: {fileID: 5849539041599377892}
   enemyController: {fileID: 9100000, guid: b2ea976e7571dd34b9c32edb26f74172, type: 2}
   moveBlendDampTime: 0.1
+  tankTurnAngle: 90
+  tankTurnSpeed: 10
   awarenessRadius: 8
   jitterRadius: 2
   reaggroCooldown: 0.2
   damage: 10
-  attackRange: 4
+  attackRange: 5
   attackCooldown: 2
   chargeDuration: 1
-  chargeSpeed: 15
+  chargeSpeed: 10
   knockbackForce: 10
   playerLayer:
     serializedVersion: 2
