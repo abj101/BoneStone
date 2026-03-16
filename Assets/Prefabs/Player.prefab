@@ -82,6 +82,7 @@ GameObject:
   - component: {fileID: 5613523051250514438}
   - component: {fileID: -2298091292658832013}
   - component: {fileID: 980851559071528436}
+  - component: {fileID: -4500742711214567768}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -330,6 +331,22 @@ MonoBehaviour:
   triSize: 0.18
   triColor: {r: 1, g: 1, b: 1, a: 0.95}
   groundOffset: 0.06
+--- !u!114 &-4500742711214567768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4341629439400432340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd4ea336d749d6247914fa367d19bb88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimeSlowController
+  slowKey: 304
+  slowAmount: 0.3
+  slowDuration: 2
+  cooldown: 5
 --- !u!1001 &4078059834442296737
 PrefabInstance:
   m_ObjectHideFlags: 0
