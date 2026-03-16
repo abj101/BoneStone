@@ -1544,8 +1544,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 433620781}
   - {fileID: 1794762888}
+  - {fileID: 433620781}
   m_Father: {fileID: 176286287}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1879,7 +1879,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   enemyPrefab: {fileID: 2537564534069962433, guid: 47e29f2e20a71ff409197f66584e6f2b, type: 3}
   spawnRadius: 10
-  waveSizes: 01000000
+  waveSizes: 0100000003000000050000000a000000
   delayBetweenWaves: 3
 --- !u!4 &243877725
 Transform:
@@ -4132,8 +4132,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2038566499}
   - {fileID: 789914164}
+  - {fileID: 2038566499}
   m_Father: {fileID: 176286287}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7305,6 +7305,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: a11442f235cc2044b8fcd9caa2309352, type: 3}
       propertyPath: m_Name
       value: pistol
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a11442f235cc2044b8fcd9caa2309352, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
