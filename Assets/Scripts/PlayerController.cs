@@ -96,11 +96,24 @@ public class PlayerController : MonoBehaviour
         UpdateMouseAimMode();
 
         // Move: Input System Vector2 (WASD / left stick)
-        Vector2 move2 = _moveAction != null ? _moveAction.action.ReadValue<Vector2>() : Vector2.zero;
+        Vector2 move2 = Vector2.zero;
+        if (_moveAction != null)
+            move2 = _moveAction.action.ReadValue<Vector2>();
+
+        // Safety fallback: if action wiring is missing/broken, still allow movement.
+        if (move2.sqrMagnitude < 0.0001f)
+            move2 = ReadKeyboardMoveFallback() + ReadGamepadMoveFallback();
+        move2 = Vector2.ClampMagnitude(move2, 1f);
         _rawInput = new Vector3(move2.x, 0f, move2.y);
 
         // Look: gamepad right stick takes priority
-        Vector2 look2 = _lookAction != null ? _lookAction.action.ReadValue<Vector2>() : Vector2.zero;
+        Vector2 look2 = Vector2.zero;
+        if (_lookAction != null)
+            look2 = _lookAction.action.ReadValue<Vector2>();
+
+        if (look2.sqrMagnitude < 0.0001f)
+            look2 = ReadGamepadLookFallback();
+
         if (look2.sqrMagnitude > 0.04f)
         {
             Vector3 stickDir = new Vector3(look2.x, 0f, look2.y).ToIso();
@@ -123,6 +136,33 @@ public class PlayerController : MonoBehaviour
                     _lastFacingDir = toMouse.normalized;
             }
         }
+    }
+
+    private static Vector2 ReadKeyboardMoveFallback()
+    {
+        if (Keyboard.current == null) return Vector2.zero;
+
+        float x = 0f;
+        float y = 0f;
+
+        if (Keyboard.current.aKey.isPressed) x -= 1f;
+        if (Keyboard.current.dKey.isPressed) x += 1f;
+        if (Keyboard.current.sKey.isPressed) y -= 1f;
+        if (Keyboard.current.wKey.isPressed) y += 1f;
+
+        return new Vector2(x, y).normalized;
+    }
+
+    private static Vector2 ReadGamepadMoveFallback()
+    {
+        if (Gamepad.current == null) return Vector2.zero;
+        return Gamepad.current.leftStick.ReadValue();
+    }
+
+    private static Vector2 ReadGamepadLookFallback()
+    {
+        if (Gamepad.current == null) return Vector2.zero;
+        return Gamepad.current.rightStick.ReadValue();
     }
 
     private void UpdateMouseAimMode()

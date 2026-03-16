@@ -38,6 +38,8 @@ public class SettingsTabController : MonoBehaviour
 
     private void OnEnable()
     {
+        EnsureTabVisuals();
+
         if (_closeButton != null)
             _closeButton.onClick.AddListener(Close);
 
@@ -122,5 +124,83 @@ public class SettingsTabController : MonoBehaviour
         // Keep indicator color consistent even if it was untinted at authoring time
         if (index < _tabIndicators.Length && _tabIndicators[index] != null)
             _tabIndicators[index].color = _indicatorColor;
+    }
+
+    private void EnsureTabVisuals()
+    {
+        if (_tabButtons == null || _tabButtons.Length == 0)
+            return;
+
+        if (_tabIndicators == null || _tabIndicators.Length != _tabButtons.Length)
+            _tabIndicators = new Image[_tabButtons.Length];
+
+        for (int i = 0; i < _tabButtons.Length; i++)
+        {
+            if (_tabButtons[i] == null) continue;
+
+            EnsureTabLabel(_tabButtons[i], i);
+            _tabIndicators[i] = EnsureIndicator(_tabButtons[i], _tabIndicators[i]);
+        }
+    }
+
+    private void EnsureTabLabel(Button tabButton, int index)
+    {
+        var label = tabButton.GetComponentInChildren<TextMeshProUGUI>(true);
+        if (label == null)
+        {
+            var labelGO = new GameObject("Text (TMP)", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+            var rt = labelGO.GetComponent<RectTransform>();
+            rt.SetParent(tabButton.transform, false);
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.offsetMin = Vector2.zero;
+            rt.offsetMax = Vector2.zero;
+            label = labelGO.GetComponent<TextMeshProUGUI>();
+        }
+
+        if (string.IsNullOrWhiteSpace(label.text))
+            label.text = GetDefaultTabLabel(index);
+
+        if (label.font == null)
+            label.font = TMP_Settings.defaultFontAsset;
+
+        label.alignment = TextAlignmentOptions.Center;
+    }
+
+    private Image EnsureIndicator(Button tabButton, Image currentIndicator)
+    {
+        if (currentIndicator != null) return currentIndicator;
+
+        var existing = tabButton.transform.Find("Indicator");
+        if (existing != null)
+        {
+            var existingImage = existing.GetComponent<Image>();
+            if (existingImage != null) return existingImage;
+        }
+
+        var indicatorGO = new GameObject("Indicator", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        var rt = indicatorGO.GetComponent<RectTransform>();
+        rt.SetParent(tabButton.transform, false);
+        rt.anchorMin = new Vector2(0f, 0f);
+        rt.anchorMax = new Vector2(1f, 0f);
+        rt.pivot = new Vector2(0.5f, 0f);
+        rt.anchoredPosition = Vector2.zero;
+        rt.sizeDelta = new Vector2(0f, 3f);
+
+        var image = indicatorGO.GetComponent<Image>();
+        image.color = _indicatorColor;
+        indicatorGO.SetActive(false);
+        return image;
+    }
+
+    private static string GetDefaultTabLabel(int index)
+    {
+        switch (index)
+        {
+            case 0: return "AUDIO";
+            case 1: return "CONTROLS";
+            case 2: return "ACCESSIBILITY";
+            default: return "TAB";
+        }
     }
 }
