@@ -22,3 +22,6 @@ Code is licensed under the MIT License.
 
 Game assets (art, audio, story) are All Rights Reserved unless otherwise stated.
 
+## Audio Credits
+This project uses third-party audio assets:
+- Pixabay- dash, gun, and sword sound effects(royalty-free, no attribution required
